@@ -7,7 +7,7 @@ exports.getAllGaji = (req, res) => {
   });
 };
 
-exports.tambahGaji = (req, res) => {
+exports.addGaji = (req, res) => {
   const { jumlah_gaji, tanggal_gaji, id_pegawai, id_admin } = req.body;
   const sql = "INSERT INTO gaji_bulanan (jumlah_gaji, tanggal_gaji, id_pegawai, id_admin) VALUES (?, ?, ?, ?)";
   db.query(
@@ -45,7 +45,7 @@ exports.updateGaji = (req, res) => {
 
 
 
-exports.hapusGaji = (req, res) => {
+exports.deleteGaji = (req, res) => {
   const { id } = req.params;
   db.query("DELETE FROM gaji_bulanan WHERE id_gaji = ?", [id], (err) => {
     if (err) return res.status(500).json({ error: err.message });
