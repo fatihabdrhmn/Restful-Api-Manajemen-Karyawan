@@ -1,5 +1,5 @@
 const db = require("../db");
-
+const { generateToken } = require("../middleware/authentication");
 
 exports.getAllAdmin = (req, res) => {
   db.query("SELECT id_admin, nama, username FROM admin", (err, results) => {

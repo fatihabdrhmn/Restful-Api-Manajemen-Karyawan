@@ -8,13 +8,13 @@ exports.getAllGaji = (req, res) => {
 };
 
 exports.addGaji = (req, res) => {
-  const { jumlah_gaji, tanggal_gaji, id_pegawai, id_admin } = req.body;
-  const sql = "INSERT INTO gaji_bulanan (jumlah_gaji, tanggal_gaji, id_pegawai, id_admin) VALUES (?, ?, ?, ?)";
+  const { jumlah_gaji, tanggal_gajian, id_pegawai, id_admin } = req.body;
+  const sql = "INSERT INTO gaji_bulanan (jumlah_gaji, tanggal_gajian, id_pegawai, id_admin) VALUES (?, ?, ?, ?)";
   db.query(
     sql, 
     [
     jumlah_gaji, 
-    tanggal_gaji, 
+    tanggal_gajian, 
     id_pegawai, 
     id_admin], 
     (err, result) => {
@@ -26,13 +26,13 @@ exports.addGaji = (req, res) => {
 
 exports.updateGaji = (req, res) => {
   const { id } = req.params;
-  const { jumlah_gaji, tanggal_gaji, id_pegawai, id_admin } = req.body;
-  const sql = "UPDATE gaji_bulanan SET jumlah_gaji=?, tanggal_gaji=?, id_pegawai=?, id_admin=? WHERE id_gaji=?";
+  const { jumlah_gaji, tanggal_gajian, id_pegawai, id_admin } = req.body;
+  const sql = "UPDATE gaji_bulanan SET jumlah_gaji=?, tanggal_gajian=?, id_pegawai=?, id_admin=? WHERE id_gaji=?";
   db.query(
     sql, 
     [
     jumlah_gaji, 
-    tanggal_gaji, 
+    tanggal_gajian, 
     id_pegawai, 
     id_admin, 
     id], 
