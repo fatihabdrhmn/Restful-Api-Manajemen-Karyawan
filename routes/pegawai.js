@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const controller = require("../controllers/pegawaiController");
+const { verifyToken } = require("../middleware/authentication");
 
 /**
  * @swagger
@@ -47,7 +48,7 @@ const controller = require("../controllers/pegawaiController");
  *         description: Pegawai berhasil ditambahkan
  */
 router.get("/", controller.getAllPegawai);
-router.post("/", controller.tambahPegawai);
+router.post("/", verifyToken, controller.tambahPegawai);
 
 
 
@@ -105,7 +106,7 @@ router.post("/", controller.tambahPegawai);
  *       200:
  *         description: Berhasil menghapus data pegawai
  */
-router.put("/:id", controller.updatePegawai);
-router.delete("/:id", controller.hapusPegawai);
+router.put("/:id", verifyToken, controller.updatePegawai);
+router.delete("/:id", verifyToken, controller.hapusPegawai);
 
 module.exports = router;
