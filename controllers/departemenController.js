@@ -25,7 +25,7 @@ exports.addDepartemen = (req, res) => {
 exports.updateDepartemen = (req, res) => {
   const { id } = req.params;
   const { nama_departemen, deskripsi_departemen } = req.body;
-  const sql = "UPDATE departemen SET nama_departemen=?, deskripsi_departemen=?";
+  const sql = "UPDATE departemen SET nama_departemen=?, deskripsi_departemen=? WHERE id_departemen=?";
   db.query(
     sql, 
     [
