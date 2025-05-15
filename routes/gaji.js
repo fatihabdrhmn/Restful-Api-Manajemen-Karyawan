@@ -22,7 +22,6 @@ const { verifyToken } = require("../middleware/authentication");
  */
 router.get("/", controller.getAllGaji);
 
-
 /**
  * @swagger
  * /gaji:
@@ -113,5 +112,7 @@ router.put("/:id", verifyToken, controller.updateGaji);
  *         description: Data gaji berhasil dihapus
  */
 router.delete("/:id", verifyToken, controller.deleteGaji);
+
+router.get("/gaji", controller.getAllDetailGaji);
 
 module.exports = router;
