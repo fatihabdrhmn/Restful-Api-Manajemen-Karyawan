@@ -10,7 +10,6 @@ const { verifyToken } = require("../middleware/authentication");
  *   description: Manajemen data jabatan
  */
 
-
 /**
  * @swagger
  * /jabatan:
@@ -20,20 +19,27 @@ const { verifyToken } = require("../middleware/authentication");
  *     responses:
  *       200:
  *         description: Daftar jabatan berhasil diambil
+ *       401:
+ *         description: Akses tanpa token atau token tidak valid
  */
-router.get("/", controller.getAllJabatan);
+
 /**
  * @swagger
  * /jabatan:
  *   post:
  *     summary: Tambah data jabatan baru
  *     tags: [Jabatan]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - nama_jabatan
+ *               - deskripsi_jabatan
  *             properties:
  *               nama_jabatan:
  *                 type: string
@@ -42,16 +48,20 @@ router.get("/", controller.getAllJabatan);
  *     responses:
  *       201:
  *         description: Jabatan berhasil ditambahkan
+ *       400:
+ *         description: Input tidak valid
+ *       401:
+ *         description: Akses tanpa token atau token tidak valid
  */
-
-router.post("/", verifyToken, controller.addJabatan);
 
 /**
  * @swagger
- * /departemen/{id}:
+ * /jabatan/{id}:
  *   put:
  *     summary: Update data jabatan berdasarkan ID
  *     tags: [Jabatan]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - name: id
  *         in: path
@@ -65,20 +75,33 @@ router.post("/", verifyToken, controller.addJabatan);
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - nama_jabatan
+ *               - deskripsi_jabatan
  *             properties:
  *               nama_jabatan:
  *                 type: string
  *               deskripsi_jabatan:
  *                 type: string
+ *     responses:
+ *       200:
+ *         description: Jabatan berhasil diperbarui
+ *       400:
+ *         description: Input tidak valid atau data tidak ditemukan
+ *       401:
+ *         description: Akses tanpa token atau token tidak valid
+ *       404:
+ *         description: Data jabatan tidak ditemukan
  */
-router.put("/:id", verifyToken, controller.updateJabatan);
 
 /**
  * @swagger
- * /departemen/{id}:
+ * /jabatan/{id}:
  *   delete:
  *     summary: Hapus data jabatan berdasarkan ID
  *     tags: [Jabatan]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - name: id
  *         in: path
@@ -89,9 +112,21 @@ router.put("/:id", verifyToken, controller.updateJabatan);
  *     responses:
  *       200:
  *         description: Jabatan berhasil dihapus
+ *       401:
+ *         description: Akses tanpa token atau token tidak valid
+ *       404:
+ *         description: Data jabatan tidak ditemukan
  */
+
+// GET semua jabatan
+router.get("/", controller.getAllJabatan);
+
+// POST jabatan baru (butuh token)
+router.post("/", verifyToken, controller.addJabatan);
+
+// PUT update jabatan berdasarkan ID (butuh token)
+router.put("/:id", verifyToken, controller.updateJabatan);
+
+// DELETE jabatan berdasarkan ID (butuh token)
 router.delete("/:id", verifyToken, controller.deleteJabatan);
-
-
-
 module.exports = router;

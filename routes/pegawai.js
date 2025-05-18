@@ -5,14 +5,32 @@ const { verifyToken } = require("../middleware/authentication");
 
 /**
  * @swagger
+ * tags:
+ *   name: Pegawai
+ *   description: Manajemen data pegawai
+ */
+
+/**
+ * @swagger
  * /pegawai:
  *   get:
- *     summary: Mendapatkan semua data pegawai
+ *     summary: Ambil semua data pegawai
+ *     tags: [Pegawai]
  *     responses:
  *       200:
- *         description: Berhasil mengambil data pegawai
+ *         description: Daftar pegawai berhasil diambil
+ *       500:
+ *         description: Terjadi kesalahan pada server
+ */
+
+/**
+ * @swagger
+ * /pegawai:
  *   post:
- *     summary: Menambahkan pegawai baru
+ *     summary: Tambah data pegawai baru
+ *     tags: [Pegawai]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -46,24 +64,29 @@ const { verifyToken } = require("../middleware/authentication");
  *     responses:
  *       201:
  *         description: Pegawai berhasil ditambahkan
+ *       400:
+ *         description: Input tidak valid
+ *       401:
+ *         description: Akses tanpa token atau token tidak valid
+ *       500:
+ *         description: Terjadi kesalahan pada server
  */
-router.get("/", controller.getAllPegawai);
-router.post("/", verifyToken, controller.tambahPegawai);
-
-
 
 /**
  * @swagger
  * /pegawai/{id}:
  *   put:
  *     summary: Update data pegawai berdasarkan ID
+ *     tags: [Pegawai]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
- *       - in: path
- *         name: id
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: ID pegawai yang akan diperbarui
  *         schema:
  *           type: integer
- *         required: true
- *         description: ID pegawai yang ingin diupdate
  *     requestBody:
  *       required: true
  *       content:
@@ -91,22 +114,53 @@ router.post("/", verifyToken, controller.tambahPegawai);
  *                 type: integer
  *     responses:
  *       200:
- *         description: Data pegawai berhasil diupdate
+ *         description: Data pegawai berhasil diperbarui
+ *       400:
+ *         description: Input tidak valid atau data tidak ditemukan
+ *       401:
+ *         description: Akses tanpa token atau token tidak valid
  *       404:
- *         description: Pegawai tidak ditemukan
+ *         description: Data pegawai tidak ditemukan
+ *       500:
+ *         description: Terjadi kesalahan pada server
+ */
+
+/**
+ * @swagger
+ * /pegawai/{id}:
  *   delete:
  *     summary: Hapus data pegawai berdasarkan ID
+ *     tags: [Pegawai]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - name: id
  *         in: path
  *         required: true
+ *         description: ID pegawai yang akan dihapus
  *         schema:
  *           type: integer
  *     responses:
  *       200:
- *         description: Berhasil menghapus data pegawai
+ *         description: Pegawai berhasil dihapus
+ *       401:
+ *         description: Akses tanpa token atau token tidak valid
+ *       404:
+ *         description: Data pegawai tidak ditemukan
+ *       500:
+ *         description: Terjadi kesalahan pada server
  */
+
+// Ambil semua data pegawai
+router.get("/", controller.getAllPegawai);
+
+// Tambah pegawai baru (butuh token)
+router.post("/", verifyToken, controller.tambahPegawai);
+
+// Update data pegawai berdasarkan ID (butuh token)
 router.put("/:id", verifyToken, controller.updatePegawai);
+
+// Hapus data pegawai berdasarkan ID (butuh token)
 router.delete("/:id", verifyToken, controller.hapusPegawai);
 
 module.exports = router;

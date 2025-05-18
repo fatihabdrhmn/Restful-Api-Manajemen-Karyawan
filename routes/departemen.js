@@ -6,35 +6,40 @@ const { verifyToken } = require("../middleware/authentication");
 /**
  * @swagger
  * tags:
- *   name: departemen
+ *   name: Departemen
  *   description: Manajemen data departemen
  */
-
 
 /**
  * @swagger
  * /departemen:
  *   get:
  *     summary: Ambil semua data departemen
- *     tags: [departemen]
+ *     tags: [Departemen]
  *     responses:
  *       200:
  *         description: Daftar departemen berhasil diambil
+ *       500:
+ *         description: Terjadi kesalahan saat mengambil data dari database
  */
-router.get("/", controller.getAllDepartemen);
 
 /**
  * @swagger
  * /departemen:
  *   post:
  *     summary: Tambah data departemen baru
- *     tags: [departemen]
+ *     tags: [Departemen]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - nama_departemen
+ *               - deskripsi_departemen
  *             properties:
  *               nama_departemen:
  *                 type: string
@@ -43,18 +48,25 @@ router.get("/", controller.getAllDepartemen);
  *     responses:
  *       201:
  *         description: Departemen berhasil ditambahkan
+ *       400:
+ *         description: Data tidak lengkap atau format salah
+ *       401:
+ *         description: Token tidak valid atau tidak tersedia
+ *       500:
+ *         description: Terjadi kesalahan saat menambahkan data
  */
-router.post("/", verifyToken, controller.addDepartemen);
 
 /**
  * @swagger
  * /departemen/{id}:
  *   put:
- *     summary: Update data departemen berdasarkan ID
- *     tags: [departemen]
+ *     summary: Perbarui data departemen berdasarkan ID
+ *     tags: [Departemen]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
- *       - name: id
- *         in: path
+ *       - in: path
+ *         name: id
  *         required: true
  *         description: ID departemen yang akan diperbarui
  *         schema:
@@ -65,33 +77,65 @@ router.post("/", verifyToken, controller.addDepartemen);
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - nama_departemen
+ *               - deskripsi_departemen
  *             properties:
  *               nama_departemen:
  *                 type: string
  *               deskripsi_departemen:
  *                 type: string
+ *     responses:
+ *       200:
+ *         description: Data departemen berhasil diperbarui
+ *       400:
+ *         description: Permintaan tidak valid
+ *       401:
+ *         description: Token tidak valid
+ *       404:
+ *         description: Departemen tidak ditemukan
+ *       500:
+ *         description: Terjadi kesalahan saat memperbarui data
  */
-router.put("/:id", verifyToken, controller.updateDepartemen);
 
 /**
  * @swagger
  * /departemen/{id}:
  *   delete:
  *     summary: Hapus data departemen berdasarkan ID
- *     tags: [departemen]
+ *     tags: [Departemen]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
- *       - name: id
- *         in: path
+ *       - in: path
+ *         name: id
  *         required: true
  *         description: ID departemen yang akan dihapus
  *         schema:
  *           type: integer
  *     responses:
  *       200:
- *         description: Departemen berhasil dihapus
+ *         description: Data departemen berhasil dihapus
+ *       400:
+ *         description: Permintaan tidak valid
+ *       401:
+ *         description: Token tidak valid
+ *       404:
+ *         description: Departemen tidak ditemukan
+ *       500:
+ *         description: Terjadi kesalahan saat menghapus data
  */
+
+// Ambil semua departemen
+router.get("/", controller.getAllDepartemen);
+
+// Tambah departemen baru (dengan verifikasi token)
+router.post("/", verifyToken, controller.addDepartemen);
+
+// Perbarui departemen berdasarkan ID (dengan verifikasi token)
+router.put("/:id", verifyToken, controller.updateDepartemen);
+
+// Hapus departemen berdasarkan ID (dengan verifikasi token)
 router.delete("/:id", verifyToken, controller.deleteDepartemen);
-
-
 
 module.exports = router;

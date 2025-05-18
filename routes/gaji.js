@@ -5,13 +5,6 @@ const { verifyToken } = require("../middleware/authentication");
 
 /**
  * @swagger
- * tags:
- *   name: Gaji
- *   description: Manajemen data gaji bulanan pegawai
- */
-
-/**
- * @swagger
  * /gaji:
  *   get:
  *     summary: Ambil semua data gaji
@@ -19,8 +12,11 @@ const { verifyToken } = require("../middleware/authentication");
  *     responses:
  *       200:
  *         description: Berhasil mengambil semua data gaji
+ *       401:
+ *         description: Akses tanpa token atau token kadaluarsa
+ *       404:
+ *         description: Endpoint tidak ditemukan
  */
-router.get("/", controller.getAllGaji);
 
 /**
  * @swagger
@@ -54,8 +50,11 @@ router.get("/", controller.getAllGaji);
  *     responses:
  *       201:
  *         description: Gaji berhasil ditambahkan
+ *       400:
+ *         description: Permintaan salah (input tidak valid atau data tidak ditemukan)
+ *       401:
+ *         description: Akses tanpa token atau token kadaluarsa
  */
-router.post("/", verifyToken, controller.addGaji);
 
 /**
  * @swagger
@@ -90,8 +89,13 @@ router.post("/", verifyToken, controller.addGaji);
  *     responses:
  *       200:
  *         description: Data gaji berhasil diperbarui
+ *       400:
+ *         description: Permintaan salah (input tidak valid atau data tidak ditemukan)
+ *       401:
+ *         description: Akses tanpa token atau token kadaluarsa
+ *       404:
+ *         description: Data gaji tidak ditemukan
  */
-router.put("/:id", verifyToken, controller.updateGaji);
 
 /**
  * @swagger
@@ -110,9 +114,61 @@ router.put("/:id", verifyToken, controller.updateGaji);
  *     responses:
  *       200:
  *         description: Data gaji berhasil dihapus
+ *       401:
+ *         description: Akses tanpa token atau token kadaluarsa
+ *       404:
+ *         description: Data gaji tidak ditemukan
  */
-router.delete("/:id", verifyToken, controller.deleteGaji);
 
+/**
+ * @swagger
+ * /gaji/{id}:
+ *   get:
+ *     summary: Ambil data gaji berdasarkan ID
+ *     tags: [Gaji]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Data gaji ditemukan
+ *       404:
+ *         description: Data gaji tidak ditemukan
+ */
+
+/**
+ * @swagger
+ * /gaji/gaji:
+ *   get:
+ *     summary: Ambil semua data gaji detail (dengan nama pegawai dan admin)
+ *     tags: [Gaji]
+ *     responses:
+ *       200:
+ *         description: Berhasil mengambil data detail gaji
+ *       401:
+ *         description: Akses tanpa token atau token kadaluarsa
+ *       404:
+ *         description: Endpoint tidak ditemukan
+ */
+
+// GET semua data gaji
+router.get("/", controller.getAllGaji);
+
+// GET detail data gaji (misalnya join dengan pegawai & admin)
 router.get("/gaji", controller.getAllDetailGaji);
 
+// GET data gaji berdasarkan ID
+router.get("/:id", controller.getGajiById);
+
+// POST data gaji (dengan token)
+router.post("/", verifyToken, controller.addGaji);
+
+// PUT update data gaji berdasarkan ID (dengan token)
+router.put("/:id", verifyToken, controller.updateGaji);
+
+// DELETE data gaji berdasarkan ID (dengan token)
+router.delete("/:id", verifyToken, controller.deleteGaji);
 module.exports = router;

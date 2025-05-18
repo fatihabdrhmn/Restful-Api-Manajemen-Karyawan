@@ -18,8 +18,11 @@ const controller = require("../controllers/adminController");
  *     responses:
  *       200:
  *         description: Daftar admin berhasil diambil
+ *       401:
+ *         description: Token tidak valid atau tidak tersedia
+ *       404:
+ *         description: Endpoint tidak ditemukan
  */
-router.get("/", controller.getAllAdmin);
 
 /**
  * @swagger
@@ -33,20 +36,20 @@ router.get("/", controller.getAllAdmin);
  *         required: true
  *         schema:
  *           type: integer
- *         description: ID admin yang dicari
  *     responses:
  *       200:
  *         description: Data admin ditemukan
- *       404:
+ *       400:
  *         description: Admin tidak ditemukan
+ *       401:
+ *         description: Token tidak valid atau tidak tersedia
  */
-router.get("/:id", controller.getAdminById);
 
 /**
  * @swagger
  * /admin:
  *   post:
- *     summary: Tambahkan admin baru
+ *     summary: Tambah admin baru
  *     tags: [Admin]
  *     requestBody:
  *       required: true
@@ -54,6 +57,10 @@ router.get("/:id", controller.getAdminById);
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - nama
+ *               - username
+ *               - password
  *             properties:
  *               nama:
  *                 type: string
@@ -64,14 +71,17 @@ router.get("/:id", controller.getAdminById);
  *     responses:
  *       201:
  *         description: Admin berhasil ditambahkan
+ *       400:
+ *         description: Data yang dikirim tidak lengkap
+ *       401:
+ *         description: Token tidak valid
  */
-router.post("/", controller.addAdmin);
 
 /**
  * @swagger
  * /admin/{id}:
  *   put:
- *     summary: Update data admin berdasarkan ID
+ *     summary: Perbarui data admin
  *     tags: [Admin]
  *     parameters:
  *       - in: path
@@ -94,9 +104,14 @@ router.post("/", controller.addAdmin);
  *                 type: string
  *     responses:
  *       200:
- *         description: Data admin berhasil diupdate
+ *         description: Data admin berhasil diperbarui
+ *       400:
+ *         description: Permintaan salah
+ *       401:
+ *         description: Token tidak valid
+ *       404:
+ *         description: Admin tidak ditemukan
  */
-router.put("/:id", controller.updateAdmin);
 
 /**
  * @swagger
@@ -113,25 +128,48 @@ router.put("/:id", controller.updateAdmin);
  *     responses:
  *       200:
  *         description: Admin berhasil dihapus
+ *       400:
+ *         description: Permintaan salah
+ *       401:
+ *         description: Token tidak valid
+ *       404:
+ *         description: Admin tidak ditemukan
  */
-router.delete("/:id", controller.deleteAdmin);
 
 /**
  * @swagger
- * /admin/{id}:
- *   delete:
- *     summary: Hapus admin berdasarkan ID
+ * /admin/login:
+ *   post:
+ *     summary: Login admin dan dapatkan token
  *     tags: [Admin]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - username
+ *               - password
+ *             properties:
+ *               username:
+ *                 type: string
+ *               password:
+ *                 type: string
  *     responses:
  *       200:
- *         description: Admin berhasil dihapus
+ *         description: Login berhasil dan token dikembalikan
+ *       400:
+ *         description: Permintaan salah (contoh: field kosong)
+ *       401:
+ *         description: Login gagal, username atau password salah
  */
-router.post("/login", controller.loginAdmin);
+
+router.get("/", controller.getAllAdmin); // /admin
+router.get("/:id", controller.getAdminById); // /admin/:id
+router.post("/", controller.addAdmin); // /admin
+router.put("/:id", controller.updateAdmin); // /admin/:id
+router.delete("/:id", controller.deleteAdmin); // /admin/:id
+router.post("/login", controller.loginAdmin); // /admin/login
 
 module.exports = router;
