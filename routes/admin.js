@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const controller = require("../controllers/adminController");
+const { verifyToken } = require("../middleware/authentication");
 
 /**
  * @swagger
@@ -18,10 +19,6 @@ const controller = require("../controllers/adminController");
  *     responses:
  *       200:
  *         description: Daftar admin berhasil diambil
- *       401:
- *         description: Token tidak valid atau tidak tersedia
- *       404:
- *         description: Endpoint tidak ditemukan
  */
 
 /**
@@ -41,8 +38,6 @@ const controller = require("../controllers/adminController");
  *         description: Data admin ditemukan
  *       400:
  *         description: Admin tidak ditemukan
- *       401:
- *         description: Token tidak valid atau tidak tersedia
  */
 
 /**
@@ -51,6 +46,8 @@ const controller = require("../controllers/adminController");
  *   post:
  *     summary: Tambah admin baru
  *     tags: [Admin]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -83,6 +80,8 @@ const controller = require("../controllers/adminController");
  *   put:
  *     summary: Perbarui data admin
  *     tags: [Admin]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -119,6 +118,8 @@ const controller = require("../controllers/adminController");
  *   delete:
  *     summary: Hapus admin berdasarkan ID
  *     tags: [Admin]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -160,16 +161,19 @@ const controller = require("../controllers/adminController");
  *       200:
  *         description: Login berhasil dan token dikembalikan
  *       400:
- *         description: Permintaan salah (contoh: field kosong)
+ *         description: Permintaan salah
  *       401:
  *         description: Login gagal, username atau password salah
  */
 
-router.get("/", controller.getAllAdmin); // /admin
-router.get("/:id", controller.getAdminById); // /admin/:id
-router.post("/", controller.addAdmin); // /admin
-router.put("/:id", controller.updateAdmin); // /admin/:id
-router.delete("/:id", controller.deleteAdmin); // /admin/:id
-router.post("/login", controller.loginAdmin); // /admin/login
+// --- PUBLIC ---
+router.get("/", controller.getAllAdmin);
+router.get("/:id", controller.getAdminById);
+router.post("/login", controller.loginAdmin);
+
+// --- PROTECTED ---
+router.post("/", verifyToken, controller.addAdmin);
+router.put("/:id", verifyToken, controller.updateAdmin);
+router.delete("/:id", verifyToken, controller.deleteAdmin);
 
 module.exports = router;

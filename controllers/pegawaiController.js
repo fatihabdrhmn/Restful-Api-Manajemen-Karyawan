@@ -12,9 +12,9 @@ exports.getAllPegawai = (req, res) => {
       p.jenis_kelamin,
       j.nama_jabatan,
       d.nama_departemen
-    FROM Pegawai p
-    JOIN Jabatan j ON p.id_jabatan = j.id_jabatan
-    JOIN Departemen d ON p.id_departemen = d.id_departemen
+    FROM pegawai p
+    JOIN jabatan j ON p.id_jabatan = j.id_jabatan
+    JOIN departemen d ON p.id_departemen = d.id_departemen
   `;
 
   db.query(sql, (err, results) => {
@@ -22,7 +22,6 @@ exports.getAllPegawai = (req, res) => {
     res.json(results);
   });
 };
-
 
 exports.tambahPegawai = (req, res) => {
   const {
@@ -37,7 +36,7 @@ exports.tambahPegawai = (req, res) => {
   } = req.body;
 
   const sql = `
-    INSERT INTO Pegawai 
+    INSERT INTO pegawai 
     (nama_pegawai, email, no_telepon, tanggal_lahir, alamat, jenis_kelamin, id_jabatan, id_departemen) 
     VALUES (?, ?, ?, ?, ?, ?, ?, ?)
   `;
@@ -73,40 +72,47 @@ exports.updatePegawai = (req, res) => {
     alamat,
     jenis_kelamin,
     id_jabatan,
-    id_departemen
+    id_departemen,
   } = req.body;
 
   const query = `
-    UPDATE Pegawai SET
+    UPDATE pegawai SET
       nama_pegawai = ?, email = ?, no_telepon = ?, tanggal_lahir = ?,
       alamat = ?, jenis_kelamin = ?, id_jabatan = ?, id_departemen = ?
     WHERE id_pegawai = ?
   `;
 
   const values = [
-    nama_pegawai, email, no_telepon, tanggal_lahir,
-    alamat, jenis_kelamin, id_jabatan, id_departemen, id
+    nama_pegawai,
+    email,
+    no_telepon,
+    tanggal_lahir,
+    alamat,
+    jenis_kelamin,
+    id_jabatan,
+    id_departemen,
+    id,
   ];
 
   db.query(query, values, (err, result) => {
     if (err) return res.status(500).json({ error: err.message });
     if (result.affectedRows === 0) {
-      return res.status(404).json({ message: 'Pegawai tidak ditemukan' });
+      return res.status(404).json({ message: "Pegawai tidak ditemukan" });
     }
-    res.json({ message: 'Data pegawai berhasil diupdate' });
+    res.json({ message: "Data pegawai berhasil diupdate" });
   });
 };
 
 exports.hapusPegawai = (req, res) => {
   const { id } = req.params;
 
-  const query = 'DELETE FROM Pegawai WHERE id_pegawai = ?';
+  const query = "DELETE FROM pegawai WHERE id_pegawai = ?";
 
   db.query(query, [id], (err, result) => {
     if (err) return res.status(500).json({ error: err.message });
     if (result.affectedRows === 0) {
-      return res.status(404).json({ message: 'Pegawai tidak ditemukan' });
+      return res.status(404).json({ message: "Pegawai tidak ditemukan" });
     }
-    res.json({ message: 'Pegawai berhasil dihapus' });
+    res.json({ message: "Pegawai berhasil dihapus" });
   });
 };

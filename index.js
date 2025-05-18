@@ -18,6 +18,20 @@ const swaggerOptions = {
       version: "1.0.0",
       description: "API untuk mengelola data pegawai, jabatan, dan departemen",
     },
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",
+        },
+      },
+    },
+    security: [
+      {
+        bearerAuth: [],
+      },
+    ],
     servers: [
       {
         url: "https://master-polygon-457007-s6.as.r.appspot.com/",
