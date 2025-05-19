@@ -16,6 +16,8 @@ const { verifyToken } = require("../middleware/authentication");
  *   get:
  *     summary: Ambil semua data admin
  *     tags: [Admin]
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *       200:
  *         description: Daftar admin berhasil diambil
@@ -27,6 +29,8 @@ const { verifyToken } = require("../middleware/authentication");
  *   get:
  *     summary: Ambil data admin berdasarkan ID
  *     tags: [Admin]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -167,9 +171,9 @@ const { verifyToken } = require("../middleware/authentication");
  */
 
 // --- PUBLIC ---
-router.get("/", controller.getAllAdmin);
-router.get("/:id", controller.getAdminById);
-router.post("/login", controller.loginAdmin);
+router.get("/", verifyToken, controller.getAllAdmin);
+router.get("/:id", verifyToken, controller.getAdminById);
+router.post("/login", verifyToken, controller.loginAdmin);
 
 // --- PROTECTED ---
 router.post("/", verifyToken, controller.addAdmin);

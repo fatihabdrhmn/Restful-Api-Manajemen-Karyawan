@@ -16,6 +16,8 @@ const { verifyToken } = require("../middleware/authentication");
  *   get:
  *     summary: Ambil semua data departemen
  *     tags: [Departemen]
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *       200:
  *         description: Daftar departemen berhasil diambil
@@ -127,7 +129,7 @@ const { verifyToken } = require("../middleware/authentication");
  */
 
 // Ambil semua departemen
-router.get("/", controller.getAllDepartemen);
+router.get("/", verifyToken, controller.getAllDepartemen);
 
 // Tambah departemen baru (dengan verifikasi token)
 router.post("/", verifyToken, controller.addDepartemen);

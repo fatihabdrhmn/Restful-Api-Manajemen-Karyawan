@@ -16,6 +16,8 @@ const { verifyToken } = require("../middleware/authentication");
  *   get:
  *     summary: Ambil semua data jabatan
  *     tags: [Jabatan]
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *       200:
  *         description: Daftar jabatan berhasil diambil
@@ -119,7 +121,7 @@ const { verifyToken } = require("../middleware/authentication");
  */
 
 // GET semua jabatan
-router.get("/", controller.getAllJabatan);
+router.get("/", verifyToken, controller.getAllJabatan);
 
 // POST jabatan baru (butuh token)
 router.post("/", verifyToken, controller.addJabatan);

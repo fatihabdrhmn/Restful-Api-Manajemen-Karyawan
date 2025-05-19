@@ -9,6 +9,8 @@ const { verifyToken } = require("../middleware/authentication");
  *   get:
  *     summary: Ambil semua data gaji
  *     tags: [Gaji]
+ *      security:
+ *       - bearerAuth: []
  *     responses:
  *       200:
  *         description: Berhasil mengambil semua data gaji
@@ -126,6 +128,8 @@ const { verifyToken } = require("../middleware/authentication");
  *   get:
  *     summary: Ambil data gaji berdasarkan ID
  *     tags: [Gaji]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -145,6 +149,8 @@ const { verifyToken } = require("../middleware/authentication");
  *   get:
  *     summary: Ambil semua data gaji detail (dengan nama pegawai dan admin)
  *     tags: [Gaji]
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *       200:
  *         description: Berhasil mengambil data detail gaji
@@ -155,13 +161,13 @@ const { verifyToken } = require("../middleware/authentication");
  */
 
 // GET semua data gaji
-router.get("/", controller.getAllGaji);
+router.get("/", verifyToken, controller.getAllGaji);
 
 // GET detail data gaji (misalnya join dengan pegawai & admin)
-router.get("/gaji", controller.getAllDetailGaji);
+router.get("/gaji", verifyToken, controller.getAllDetailGaji);
 
 // GET data gaji berdasarkan ID
-router.get("/:id", controller.getGajiById);
+router.get("/:id", verifyToken, controller.getGajiById);
 
 // POST data gaji (dengan token)
 router.post("/", verifyToken, controller.addGaji);
